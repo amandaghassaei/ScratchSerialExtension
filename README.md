@@ -20,3 +20,10 @@ node dependencies:
 <a href="https://www.npmjs.com/package/socket.io">socket-io</a>
 
 Simple demo of standalone node server with web client <a href="https://github.com/amandaghassaei/NodeSerialPortBoilerplate">here</a>.
+
+
+**Attribution:**
+
+Door sound effects from <a href="https://www.freesoundeffects.com/">freesoundeffects.com</a><br/>
+Bike Horn sound effect from <a href="http://soundbible.com/1446-Bike-Horn.html">soundbible.com</a><br/>
+Swoosh sound effect from <a href="http://soundbible.com/706-Swoosh-3.html">soundbible.com</a>

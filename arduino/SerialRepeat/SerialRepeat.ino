@@ -11,7 +11,6 @@ void loop() {
     Serial.print("received: ");
     Serial.println(Serial.readString());
   }
-//  delay(1);
 }
 
 

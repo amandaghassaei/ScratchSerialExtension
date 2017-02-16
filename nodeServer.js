@@ -17,7 +17,7 @@ var allPorts = [];
 io.on('connection', function(socket){
 
     refreshAvailablePorts(function(_allPorts, _portName, _baudRate){
-        currentPort = changePort(_portName, _baudRate);
+        changePort(_portName, _baudRate);
     });
 
     socket.on('initPort', function(data){
@@ -25,9 +25,7 @@ io.on('connection', function(socket){
             var _portName = data.portName || portName;
             var _baudRate = data.baudRate || baudRate;
             if (!checkThatPortExists(_portName)) return;
-            currentPort = changePort(_portName, _baudRate);
-            portName = _portName;
-            baudRate = _baudRate;
+            changePort(_portName, _baudRate);
         });
     });
 
@@ -114,13 +112,14 @@ io.on('connection', function(socket){
         return port;
     }
 
-    function disconnectPort(){
+    function disconnectPort(callback){
         if (currentPort && currentPort.isOpen()){
             var oldBaud = baudRate;
             var oldName = portName;
             console.log("disconnecting port " + oldName + " at " + oldBaud);
             currentPort.on('close', function(){
                 io.emit("portDisconnected", {baudRate:oldBaud, portName:oldName});
+                if (callback) callback();
             });
             currentPort.close(function(error){
                 if (error) {
@@ -129,7 +128,7 @@ io.on('connection', function(socket){
                 }
 
             });
-        }
+        } else if (callback) callback();
     }
 
     function changePort(_portName, _baudRate){
@@ -139,8 +138,11 @@ io.on('connection', function(socket){
             return null;
         }
         if (!_baudRate) _baudRate = baudRate;
-        disconnectPort();
-        return initPort(_portName, _baudRate);
+        disconnectPort(function(){
+            currentPort = initPort(_portName, _baudRate);
+            portName = _portName;
+            baudRate = _baudRate;
+        });
     }
 
     function onPortOpen(name, baud){
