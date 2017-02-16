@@ -15,6 +15,7 @@ new (function() {
     var lastMessageReceived = "";
     var lastMessageSent = "";
     var lastError = "";
+    var connected = false;
 
     var descriptor = {
         blocks: [
@@ -27,6 +28,7 @@ new (function() {
             ['h', 'when serial port connected', 'portConnected'],
             ['h', 'when serial port disconnected', 'portDisconnected'],
             ['h', 'when serial error thrown', 'errorThrown'],
+            ['b', 'port is connected', 'checkConnection'],
             ['r', 'get port name', 'getPortName'],
             ['r', 'get baud rate', 'getBaudRate'],
             ['r', 'get last incoming message', 'getLastMessageReceived'],
@@ -145,6 +147,7 @@ new (function() {
     socket.on('portConnected', function(data){
         currentPort = data.portName;
         currentBaud = data.baudRate;
+        connected = true;
         portConnectedEvent = true;
         // console.log("connected to port " + data.portName + " at " + data.baudRate);
     });
@@ -159,6 +162,7 @@ new (function() {
     var portDisonnectedEvent = false;
     socket.on('portDisconnected', function(data){
         currentPort = nullPort;
+        connected = false;
         portDisonnectedEvent = true;
         // console.log("disconnected port " + data.portName + " at " + data.baudRate);
     });
@@ -174,18 +178,21 @@ new (function() {
     socket.on("errorMsg", function(data){
         if (data.error) lastError = data.error;
         else lastError = data;
+        connected = false;
         errorThrownEvent = true;
         // console.warn(data);
     });
 
     socket.on("error", function(error){
         lastError = data;
+        connected = false;
         errorThrownEvent = true;
         // console.warn(error);
     });
 
     socket.on("connect_error", function(){
         lastError = "node server connection error";
+        connected = false;
         errorThrownEvent = true;
         // console.log("node server connection error");
     });
@@ -195,6 +202,10 @@ new (function() {
             return true;
         }
         return false;
+    };
+
+    ext.checkConnection = function(){
+        return connected;
     };
 
     ext.getPortName = function(){

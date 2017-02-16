@@ -45,7 +45,7 @@ io.on('connection', function(socket){
         // data += '\n';
         console.log("Sending data: " + data);
         if (!currentPort){
-            console.log("no connection");
+            socket.emit("errorMsg", {error:"no port currently connected"});
             return;
         }
         currentPort.write(new Buffer(data), function(err, res) {
