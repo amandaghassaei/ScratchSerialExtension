@@ -19,7 +19,7 @@ new (function() {
 
         if (data.portName) currentPort = data.portName;
         if (data.baudRate) currentBaud = data.baudRate;
-        availablePorts.splice(0, availablePorts.length);
+        // availablePorts.splice(0, availablePorts.length);
         if (data.availablePorts && data.availablePorts.length>0){
             for (var i=0;i<data.availablePorts.length;i++){
                availablePorts.push(data.availablePorts[i]);
