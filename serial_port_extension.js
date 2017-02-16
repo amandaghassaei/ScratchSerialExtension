@@ -14,6 +14,7 @@ new (function() {
     var currentBaud = 9600;
     var lastMessageReceived = "";
     var lastMessageSent = "";
+    var lastError = "";
 
     //bind events
     socket.on('connected', function(data){
@@ -34,18 +35,6 @@ new (function() {
         console.log(availablePorts);
     });
 
-    socket.on("errorMsg", function(data){
-        console.warn(data);
-    });
-
-    socket.on("error", function(error){
-        console.warn(error);
-    });
-
-    socket.on("connect_error", function(){
-        console.log("connect error");
-    });
-
     var descriptor = {
         blocks: [
             ['', 'refresh ports', 'refreshPorts'],
@@ -56,10 +45,12 @@ new (function() {
             ['h', 'when serial message received', 'dataIn'],
             ['h', 'when serial port connected', 'portConnected'],
             ['h', 'when serial port disconnected', 'portDisconnected'],
-            ['r', 'get current port name', 'getPortName'],
-            ['r', 'get current baud rate', 'getBaudRate'],
+            ['h', 'when serial error thrown', 'errorThrown'],
+            ['r', 'get port name', 'getPortName'],
+            ['r', 'get baud rate', 'getBaudRate'],
             ['r', 'get last incoming message', 'getLastMessageReceived'],
             ['r', 'get last outgoing message', 'getLastMessageSent'],
+            ['r', 'get last error', 'getLastError'],
             ['', 'flush serial port', 'flush']
         ],
         menus: {
@@ -150,6 +141,32 @@ new (function() {
         return false;
     };
 
+    var errorThrownEvent = false;
+    socket.on("errorMsg", function(data){
+        lastError = data;
+        errorThrownEvent = true;
+        console.warn(data);
+    });
+
+    socket.on("error", function(error){
+        lastError = data;
+        errorThrownEvent = true;
+        console.warn(error);
+    });
+
+    socket.on("connect_error", function(){
+        lastError = "connection error";
+        errorThrownEvent = true;
+        console.log("connect error");
+    });
+    ext.errorThrown = function(){
+        if (errorThrownEvent === true){
+            errorThrownEvent = false;
+            return true;
+        }
+        return false;
+    };
+
     ext.getPortName = function(){
         return currentPort;
     };
@@ -162,6 +179,10 @@ new (function() {
     };
     ext.getLastMessageSent = function(){
         return lastMessageSent;
+    };
+
+    ext.getLastError = function(){
+        return lastError;
     };
 
     ext.flush = function(){
