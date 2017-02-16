@@ -113,7 +113,6 @@ new (function() {
     };
 
     ext.setupSerial = function(portName, baudRate){
-        console.log(portName === nullPort);
         if (portName === nullPort){
             socket.emit("disconnectPort");
             return;
@@ -131,7 +130,6 @@ new (function() {
     socket.on("dataIn", function(data){//oncoming serial data
         lastMessageReceived = data;
         messageReceivedEvent = true;
-        // console.log("data: " + data);
     });
     ext.dataIn = function(){
         if (messageReceivedEvent === true){
@@ -147,7 +145,6 @@ new (function() {
         currentBaud = data.baudRate;
         connected = true;
         portConnectedEvent = true;
-        // console.log("connected to port " + data.portName + " at " + data.baudRate);
     });
     ext.portConnected = function(){
         if (portConnectedEvent === true){
@@ -162,7 +159,6 @@ new (function() {
         currentPort = nullPort;
         connected = false;
         portDisonnectedEvent = true;
-        // console.log("disconnected port " + data.portName + " at " + data.baudRate);
     });
     ext.portDisconnected = function(){
         if (portDisonnectedEvent === true){
@@ -178,21 +174,18 @@ new (function() {
         else lastError = data;
         connected = false;
         errorThrownEvent = true;
-        // console.warn(data);
     });
 
     socket.on("error", function(error){
-        lastError = data;
+        lastError = error;
         connected = false;
         errorThrownEvent = true;
-        // console.warn(error);
     });
 
     socket.on("connect_error", function(){
         lastError = "node server connection error";
         connected = false;
         errorThrownEvent = true;
-        // console.log("node server connection error");
     });
     ext.errorThrown = function(){
         if (errorThrownEvent === true){
