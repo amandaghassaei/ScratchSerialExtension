@@ -18,7 +18,7 @@ new (function() {
         }
     };
 
-    availablePorts.append("amanda");
+    availablePorts.push("amanda");
 
 
     ext.choosePort = function(func, num) {
