@@ -33,6 +33,7 @@ new (function() {
             currentPort = availablePorts[0];
         }
         console.log(availablePorts);
+        ScratchExtensions.register('Serial Port', descriptor, ext);
     });
 
     var descriptor = {
@@ -144,7 +145,7 @@ new (function() {
         if (data.error) lastError = data.error;
         else lastError = data;
         errorThrownEvent = true;
-        console.warn(data);
+        // console.warn(data);
     });
 
     socket.on("error", function(error){
