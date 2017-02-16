@@ -69,8 +69,8 @@ new (function() {
             //this is so hacky!  I know I'm terrible, but this was the only way to update my menus
             Scratch.FlashApp.ASobj.ASloadExtension({
                 extensionName: "Serial Port",
-                // blockSpecs: descriptor.blocks,
-                // url: descriptor.url,
+                blockSpecs: descriptor.blocks,
+                url: descriptor.url,
                 menus: descriptor.menus
             });
         }
