@@ -10,11 +10,12 @@ new (function() {
 
     var descriptor = {
         blocks: [
-            ['r', '%m.availablePorts of %n', 'choosePort']
+            ['r', 'choose port: %m.availablePorts', 'choosePort'],
+            ['r', 'choose baud rate: %m.baudRates', 'chooseBaudRate']
         ],
         menus: {
-            functions: ['csc', 'sec', 'cot', 'asin', 'acos', 'atan'],
-            availablePorts: availablePorts
+            availablePorts: availablePorts,
+            baudRates: [9600, 19200, 38400, 57600, 74880, 115200, 230400, 250000]
         }
     };
 
@@ -29,27 +30,12 @@ new (function() {
         return {status: 2, msg: 'Ready'};
     };
 
-    ext.choosePort = function(func, num) {
-        switch(func) {
-            case 'csc':
-                return 1 / Math.sin((num * Math.PI) / 180);
-                break;
-            case 'sec':
-                return 1 / Math.cos((num * Math.PI) / 180);
-                break;
-            case 'cot':
-                return 1 / Math.tan((num * Math.PI) / 180);
-                break;
-            case 'asin':
-                return (Math.asin(num) * 180) / Math.PI;
-                break;
-            case 'acos':
-                return (Math.acos(num) * 180) / Math.PI;
-                break;
-            case 'atan':
-                return (Math.atan(num) * 180) / Math.PI;
-                break;
-        }
+    ext.choosePort = function(portName) {
+        return portName;
+    };
+
+    ext.chooseBaudRate = function(baudRate) {
+        return baudRate;
     };
 
     ScratchExtensions.register('Serial Port', descriptor, ext);
