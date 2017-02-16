@@ -10,7 +10,7 @@ click "Load Experimental Extension", and paste in the following link:
 
 <a href="https://rawgit.com/amandaghassaei/ScratchSerialExtension/e68c217f033baedcac5cbd04c91876898e4137ac/serial_port_extension.js">https://rawgit.com/amandaghassaei/ScratchSerialExtension/e68c217f033baedcac5cbd04c91876898e4137ac/serial_port_extension.js</a>
 
-Communication to Serial Port happens through a node server.  To start the server run:
+Serial communication happens through a node server.  To start the server run:
 
 **node nodeServer.js**
 
