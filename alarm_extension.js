@@ -1,3 +1,5 @@
+console.log("test");
+
 new (function() {
     var ext = this;
     var descriptor = {
@@ -134,5 +136,5 @@ new (function() {
         return store;
     };
 
-    ScratchExtensions.register('More Math', descriptor, ext);
+    ScratchExtensions.register('More Math custom', descriptor, ext);
 })();
