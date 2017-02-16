@@ -6,12 +6,13 @@
 new (function() {
     var ext = this;
 
-    var availablePorts = ["test", "thing"];
+    var availablePorts = ["nothing connected"];
+    var socket = io.connect('http://localhost:8080');
 
     var descriptor = {
         blocks: [
-            ['r', 'choose port: %m.availablePorts', 'choosePort'],
-            ['r', 'choose baud rate: %m.baudRates', 'chooseBaudRate']
+            ['r', 'port name: %m.availablePorts', 'choosePort', availablePorts[0]],
+            ['r', 'baud rate: %m.baudRates', 'chooseBaudRate', 9600]
         ],
         menus: {
             availablePorts: availablePorts,
@@ -31,11 +32,14 @@ new (function() {
     };
 
     ext.choosePort = function(portName) {
-        return portName;
+        if (portName == "nothing connected"){
+            return {};
+        }
+        return {portName: portName};
     };
 
     ext.chooseBaudRate = function(baudRate) {
-        return baudRate;
+        return {baudRate: baudRate};
     };
 
     ScratchExtensions.register('Serial Port', descriptor, ext);
