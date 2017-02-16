@@ -9,12 +9,46 @@ new (function() {
     var availablePorts = ["nothing connected"];
     var socket = io.connect('http://localhost:8080');
 
+    var currentPort = availablePorts[0];
+    var currentBaud = 9600;
+
+    //bind events
+    socket.on('connected', function(data){
+
+        console.log("connected");
+
+        if (data.portName) currentPort = data.portName;
+        if (data.baudRate) currentBaud = data.baudRate;
+        availablePorts.splice(0, availablePorts.length);
+        if (data.availablePorts && data.availablePorts.length>0){
+            for (var i=0;i<data.availablePorts.length;i++){
+               availablePorts.push(data.availablePorts[i]);
+            }
+        } else {
+            availablePorts.push("nothing connected");
+            currentPort = availablePorts[0];
+        }
+    });
+
+    socket.on("errorMsg", function(data){
+        console.warn(data);
+    });
+
+    socket.on("error", function(error){
+        console.warn(error);
+    });
+
+    socket.on("connect_error", function(){
+        console.log("connect error");
+    });
+
     var descriptor = {
         blocks: [
             ['', 'refresh ports', 'refreshPorts'],
-            ['r', 'port name: %m.availablePorts', 'choosePort', availablePorts[0]],
-            ['r', 'baud rate: %m.baudRates', 'chooseBaudRate', 9600],
-            ['b', 'serial port with name: %s and baud rate: %s', 'setupSerial']
+            ['', 'connect to serial port: %m.availablePorts at baud rate: %m.baudRates', 'setupSerial', currentPort, currentBaud],
+            ['h', 'when serial message received', 'dataIn'],
+            ['h', 'when serial port connected', 'portConnected'],
+            ['h', 'when serial port disconnected', 'portDisconnected']
         ],
         menus: {
             availablePorts: availablePorts,
@@ -25,7 +59,10 @@ new (function() {
     availablePorts.push("amanda");
 
     // Cleanup function when the extension is unloaded
-    ext._shutdown = function() {};
+    ext._shutdown = function() {
+        socket = null;
+        io = null;
+    };
 
     // Status reporting code
     // Use this to report missing hardware, plugin or unsupported browser
@@ -34,23 +71,56 @@ new (function() {
     };
 
     ext.refreshPorts = function(){
-        console.log("amanda");
-    };
-
-    ext.choosePort = function(portName) {
-        if (portName == "nothing connected"){
-            return {};
-        }
-        return portName;
-    };
-
-    ext.chooseBaudRate = function(baudRate) {
-        return baudRate;
+        socket.emit("refreshPorts");
     };
 
     ext.setupSerial = function(portName, baudRate){
+        if (portName == "nothing connected"){
+
+        }
+        socket.emit("portName", portName);
+        socket.emit("baudRate", baudRate);
         console.log(portName);
         console.log(baudRate);
+    };
+
+    var messageReceivedEvent = false;
+    socket.on("dataIn", function(data){//oncoming serial data
+        messageReceivedEvent = true;
+        console.log("data: " + data);
+    });
+    ext.dataIn = function(){
+        if (messageReceivedEvent === true){
+            messageReceivedEvent = false;
+            return true;
+        }
+        return false;
+    };
+
+    var portConnectedEvent = false;
+    socket.on('portConnected', function(data){
+        portConnectedEvent = true;
+        console.log("connected to port " + data.portName + " at " + data.baudRate);
+    });
+    ext.portConnected = function(){
+        if (portConnectedEvent === true){
+            portConnectedEvent = false;
+            return true;
+        }
+        return false;
+    };
+
+    var portDisonnectedEvent = false;
+    socket.on('portDisconnected', function(data){
+        portDisonnectedEvent = true;
+        console.log("disconnected port " + data.portName + " at " + data.baudRate);
+    });
+    ext.portDisConnected = function(){
+        if (portDisonnectedEvent === true){
+            portDisonnectedEvent = false;
+            return true;
+        }
+        return false;
     };
 
     ScratchExtensions.register('Serial Port', descriptor, ext);
