@@ -6,7 +6,8 @@
 new (function() {
     var ext = this;
 
-    var availablePorts = ["nothing connected"];
+    var nullPort = "nothing connected";
+    var availablePorts = [nullPort];
     var socket = io.connect('http://localhost:8080');
 
     var currentPort = availablePorts[0];
@@ -19,13 +20,13 @@ new (function() {
 
         if (data.portName) currentPort = data.portName;
         if (data.baudRate) currentBaud = data.baudRate;
-        // availablePorts.splice(0, availablePorts.length);
+        availablePorts.splice(0, availablePorts.length);
         if (data.availablePorts && data.availablePorts.length>0){
             for (var i=0;i<data.availablePorts.length;i++){
                availablePorts.push(data.availablePorts[i]);
             }
         } else {
-            availablePorts.push("nothing connected");
+            availablePorts.push(nullPort);
             currentPort = availablePorts[0];
         }
         console.log(availablePorts);
@@ -46,10 +47,14 @@ new (function() {
     var descriptor = {
         blocks: [
             ['', 'refresh ports', 'refreshPorts'],
-            ['', 'connect to serial port: %m.availablePorts at baud rate: %m.baudRates', 'setupSerial', currentPort, currentBaud],
+            ['r', "serial port: %m.availablePorts", 'setPort', currentPort],
+            ['r', "baud rate: %m.baudRates", 'setBaud', currentBaud],
+            ['', 'connect to %s at %s', 'setupSerial', currentPort, currentBaud],
             ['h', 'when serial message received', 'dataIn'],
             ['h', 'when serial port connected', 'portConnected'],
-            ['h', 'when serial port disconnected', 'portDisconnected']
+            ['h', 'when serial port disconnected', 'portDisconnected'],
+            ['r', 'get current port name', 'getPortName'],
+            ['r', 'get current baud rate', 'getBaudRate']
         ],
         menus: {
             availablePorts: availablePorts,
@@ -77,12 +82,23 @@ new (function() {
         socket.emit("refreshPorts");
     };
 
-    ext.setupSerial = function(portName, baudRate){
-        if (portName == "nothing connected"){
-
+    ext.setPort = function(portName){
+        if (portName == nullPort){
+            socket.emit("disconnectPort");
+            return;
         }
         socket.emit("portName", portName);
+        return portName;
+    };
+    ext.setBaud = function(baudRate){
         socket.emit("baudRate", baudRate);
+        return baudRate;
+    };
+
+    ext.setupSerial = function(portName, baudRate){
+        if (portName == nullPort){
+            return;
+        }
         console.log(portName);
         console.log(baudRate);
     };
@@ -102,6 +118,8 @@ new (function() {
 
     var portConnectedEvent = false;
     socket.on('portConnected', function(data){
+        currentPort = data.portName;
+        currentBaud = data.baudRate;
         portConnectedEvent = true;
         console.log("connected to port " + data.portName + " at " + data.baudRate);
     });
@@ -115,15 +133,23 @@ new (function() {
 
     var portDisonnectedEvent = false;
     socket.on('portDisconnected', function(data){
+        currentPort = nullPort;
         portDisonnectedEvent = true;
         console.log("disconnected port " + data.portName + " at " + data.baudRate);
     });
-    ext.portDisConnected = function(){
+    ext.portDisconnected = function(){
         if (portDisonnectedEvent === true){
             portDisonnectedEvent = false;
             return true;
         }
         return false;
+    };
+
+    ext.getPortName = function(){
+        return currentPort;
+    };
+    ext.getBaudRate = function(){
+        return currentBaud;
     };
 
     ScratchExtensions.register('Serial Port', descriptor, ext);

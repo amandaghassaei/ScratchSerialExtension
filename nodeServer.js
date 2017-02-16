@@ -61,6 +61,10 @@ io.on('connection', function(socket){
         allPorts = refreshAvailablePorts();
     });
 
+    socket.on('disconnectPort', function(){
+        disconnectPort();
+    });
+
     function checkThatPortExists(_portName){
         if (allPorts.indexOf(_portName) < 0) {
             onPortError("no available port called " + _portName);
@@ -116,13 +120,8 @@ io.on('connection', function(socket){
         return port;
     }
 
-    function changePort(_portName, _baudRate){
-        console.log("change");
-        if (!_portName) {
-            onPortError("no port name specified");
-            return null;
-        }
-        if (currentPort) {
+    function disconnectPort(){
+        if (currentPort){
             var oldBaud = baudRate;
             var oldName = portName;
             console.log("disconnecting port " + oldName + " at " + oldBaud);
@@ -134,6 +133,15 @@ io.on('connection', function(socket){
                 io.emit("portDisconnected", {baudRate:oldBaud, portName:oldName});
             });
         }
+    }
+
+    function changePort(_portName, _baudRate){
+        console.log("change");
+        if (!_portName) {
+            onPortError("no port name specified");
+            return null;
+        }
+        disconnectPort();
         return initPort(_portName, _baudRate);
     }
 
