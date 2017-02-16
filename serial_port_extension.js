@@ -120,8 +120,7 @@ new (function() {
             socket.emit("disconnectPort");
             return;
         }
-        socket.emit("baudRate", baudRate);
-        socket.emit("portName", portName);
+        socket.emit("initPort", {baudRate:baudRate, portName:portName});
     };
 
     ext.sendMessage = function(message){

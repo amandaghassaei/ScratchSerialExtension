@@ -36,6 +36,17 @@ io.on('connection', function(socket){
         });
     });
 
+    socket.on('initPort', function(data){
+        refreshAvailablePorts(function(){
+            var _portName = data.portName || portName;
+            var _baudRate = data.baudRate || baudRate;
+            if (!checkThatPortExists(_portName)) return;
+            currentPort = changePort(_portName, _baudRate);
+            portName = _portName;
+            baudRate = _baudRate;
+        });
+    });
+
     socket.on('dataOut', function(data){
         outputData(data);
     });
@@ -113,7 +124,7 @@ io.on('connection', function(socket){
         port.open(function(error){
             if (error) {
                 onPortError(error);
-                currentPort = null;
+                // currentPort = null;
                 return;
             }
             onPortOpen(_portName, _baudRate);
@@ -125,18 +136,20 @@ io.on('connection', function(socket){
     }
 
     function disconnectPort(){
-        if (currentPort){
+        // if (currentPort){
             var oldBaud = baudRate;
             var oldName = portName;
-            console.log("disconnecting port " + oldName + " at " + oldBaud);
-            if (currentPort.isOpen()) currentPort.close(function(error){
-                if (error) {
-                    onPortError(error);
-                    return null;
-                }
-                io.emit("portDisconnected", {baudRate:oldBaud, portName:oldName});
-            });
-        }
+            if (currentPort && currentPort.isOpen()){
+                console.log("disconnecting port " + oldName + " at " + oldBaud);
+                currentPort.close(function(error){
+                    if (error) {
+                        onPortError(error);
+                        return null;
+                    }
+                    io.emit("portDisconnected", {baudRate:oldBaud, portName:oldName});
+                });
+            }
+        // }
     }
 
     function changePort(_portName, _baudRate){
