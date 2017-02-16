@@ -141,9 +141,10 @@ new (function() {
 
     var errorThrownEvent = false;
     socket.on("errorMsg", function(data){
-        lastError = data;
+        if (data.Error) lastError = data.Error;
+        else lastError - data;
         errorThrownEvent = true;
-        // console.warn(data);
+        console.warn(data);
     });
 
     socket.on("error", function(error){
