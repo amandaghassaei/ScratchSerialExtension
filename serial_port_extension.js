@@ -19,7 +19,7 @@ new (function() {
     //bind events
     socket.on('connected', function(data){
 
-        console.log("connected");
+        // console.log("connected");
 
         if (data.portName) currentPort = data.portName;
         if (data.baudRate) currentBaud = data.baudRate;
@@ -58,8 +58,6 @@ new (function() {
             baudRates: [9600, 19200, 38400, 57600, 74880, 115200, 230400, 250000]
         }
     };
-
-    console.log(this);
 
     // Cleanup function when the extension is unloaded
     ext._shutdown = function() {
@@ -117,7 +115,7 @@ new (function() {
         currentPort = data.portName;
         currentBaud = data.baudRate;
         portConnectedEvent = true;
-        console.log("connected to port " + data.portName + " at " + data.baudRate);
+        // console.log("connected to port " + data.portName + " at " + data.baudRate);
     });
     ext.portConnected = function(){
         if (portConnectedEvent === true){
@@ -131,7 +129,7 @@ new (function() {
     socket.on('portDisconnected', function(data){
         currentPort = nullPort;
         portDisonnectedEvent = true;
-        console.log("disconnected port " + data.portName + " at " + data.baudRate);
+        // console.log("disconnected port " + data.portName + " at " + data.baudRate);
     });
     ext.portDisconnected = function(){
         if (portDisonnectedEvent === true){
@@ -145,19 +143,19 @@ new (function() {
     socket.on("errorMsg", function(data){
         lastError = data;
         errorThrownEvent = true;
-        console.warn(data);
+        // console.warn(data);
     });
 
     socket.on("error", function(error){
         lastError = data;
         errorThrownEvent = true;
-        console.warn(error);
+        // console.warn(error);
     });
 
     socket.on("connect_error", function(){
-        lastError = "connection error";
+        lastError = "node server connection error";
         errorThrownEvent = true;
-        console.log("connect error");
+        // console.log("node server connection error");
     });
     ext.errorThrown = function(){
         if (errorThrownEvent === true){
