@@ -14,7 +14,7 @@ new (function() {
             ['', 'refresh ports', 'refreshPorts'],
             ['r', 'port name: %m.availablePorts', 'choosePort', availablePorts[0]],
             ['r', 'baud rate: %m.baudRates', 'chooseBaudRate', 9600],
-            ['', 'serial port with name: %m.availablePorts and rate: %m.baudRates', setupSerial, availablePorts[0], 9600]
+            ['', 'serial port with name: %m.availablePorts and rate: %m.baudRates', 'setupSerial', availablePorts[0], 9600]
         ],
         menus: {
             availablePorts: availablePorts,
