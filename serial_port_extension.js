@@ -56,6 +56,10 @@ new (function() {
             baudRates: [9600, 19200, 38400, 57600, 74880, 115200, 230400, 250000]
         }
     };
+    availablePorts.push("test");
+    setTimeout(function(){
+        availablePorts.push("test2");
+    }, 1000);
 
     // Cleanup function when the extension is unloaded
     ext._shutdown = function() {
