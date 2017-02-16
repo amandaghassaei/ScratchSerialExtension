@@ -5,16 +5,21 @@
 
 new (function() {
     var ext = this;
+
+    var availablePorts = ["test", "thing"];
+
     var descriptor = {
         blocks: [
-            ['r', '%m.functions of %n', 'choosePort']
+            ['r', '%m.availablePorts of %n', 'choosePort']
         ],
         menus: {
-            functions: ['csc', 'sec', 'cot', 'asin', 'acos', 'atan']
+            functions: ['csc', 'sec', 'cot', 'asin', 'acos', 'atan'],
+            availablePorts: availablePorts
         }
     };
 
-    var availablePorts = [];
+    availablePorts.append("amanda");
+
 
     ext.choosePort = function(func, num) {
         switch(func) {
