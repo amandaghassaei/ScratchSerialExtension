@@ -28,6 +28,7 @@ new (function() {
             availablePorts.push("nothing connected");
             currentPort = availablePorts[0];
         }
+        console.log(availablePorts);
     });
 
     socket.on("errorMsg", function(data){
@@ -55,8 +56,6 @@ new (function() {
             baudRates: [9600, 19200, 38400, 57600, 74880, 115200, 230400, 250000]
         }
     };
-
-    availablePorts.push("amanda");
 
     // Cleanup function when the extension is unloaded
     ext._shutdown = function() {
