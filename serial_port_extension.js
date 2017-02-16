@@ -11,6 +11,7 @@ new (function() {
 
     var descriptor = {
         blocks: [
+            ['', 'refresh ports', 'refreshPorts'],
             ['r', 'port name: %m.availablePorts', 'choosePort', availablePorts[0]],
             ['r', 'baud rate: %m.baudRates', 'chooseBaudRate', 9600]
         ],
@@ -29,6 +30,10 @@ new (function() {
     // Use this to report missing hardware, plugin or unsupported browser
     ext._getStatus = function() {
         return {status: 2, msg: 'Ready'};
+    };
+
+    ext.refreshPorts = function(){
+        console.log("amanda");
     };
 
     ext.choosePort = function(portName) {
