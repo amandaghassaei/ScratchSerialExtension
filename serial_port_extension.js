@@ -59,7 +59,8 @@ new (function() {
             ['r', 'get current port name', 'getPortName'],
             ['r', 'get current baud rate', 'getBaudRate'],
             ['r', 'get last incoming message', 'getLastMessageReceived'],
-            ['r', 'get last outgoing message', 'getLastMessageSent']
+            ['r', 'get last outgoing message', 'getLastMessageSent'],
+            ['', 'flush serial port', 'flush']
         ],
         menus: {
             availablePorts: availablePorts,
@@ -163,6 +164,10 @@ new (function() {
     };
     ext.getLastMessageSent = function(){
         return lastMessageSent;
+    };
+
+    ext.flush = function(){
+        socket.emit("flush");
     };
 
     ScratchExtensions.register('Serial Port', descriptor, ext);

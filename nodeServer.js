@@ -11,7 +11,7 @@ app.listen(8080);
 //defaults
 var portName = null;
 var currentPort = null;
-var baudRate = 115200;
+var baudRate = 9600;
 
 io.on('connection', function(socket){
 
@@ -42,8 +42,12 @@ io.on('connection', function(socket){
 
     function outputData(data){
         io.emit('dataSent', data);
-        data += '\n';
+        // data += '\n';
         console.log("Sending data: " + data);
+        if (!currentPort){
+            console.log("no connection");
+            return;
+        }
         currentPort.write(new Buffer(data), function(err, res) {
             if (err) onPortError(err);
         });
@@ -100,7 +104,7 @@ io.on('connection', function(socket){
 
         console.log("initing port " + _portName + " at " + _baudRate);
         var port = new SerialPort(_portName, {
-            baudRate: _baudRate,
+            baudRate: parseInt(_baudRate),
             parser: SerialPort.parsers.readline("\n"),
             autoOpen: false
         //       parser: SerialPort.parsers.raw
