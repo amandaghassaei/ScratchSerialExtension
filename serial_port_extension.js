@@ -12,6 +12,8 @@ new (function() {
 
     var currentPort = availablePorts[0];
     var currentBaud = 9600;
+    var lastMessageReceived = "";
+    var lastMessageSent = "";
 
     //bind events
     socket.on('connected', function(data){
@@ -54,7 +56,9 @@ new (function() {
             ['h', 'when serial port connected', 'portConnected'],
             ['h', 'when serial port disconnected', 'portDisconnected'],
             ['r', 'get current port name', 'getPortName'],
-            ['r', 'get current baud rate', 'getBaudRate']
+            ['r', 'get current baud rate', 'getBaudRate'],
+            ['r', 'get last incoming message', 'getLastMessageReceived'],
+            ['r', 'get last outgoing message', 'getLastMessageSent']
         ],
         menus: {
             availablePorts: availablePorts,
@@ -83,28 +87,24 @@ new (function() {
     };
 
     ext.setPort = function(portName){
+        return portName;
+    };
+    ext.setBaud = function(baudRate){
+        return baudRate;
+    };
+
+    ext.setupSerial = function(portName, baudRate){
+        socket.emit("baudRate", baudRate);
         if (portName == nullPort){
             socket.emit("disconnectPort");
             return;
         }
         socket.emit("portName", portName);
-        return portName;
-    };
-    ext.setBaud = function(baudRate){
-        socket.emit("baudRate", baudRate);
-        return baudRate;
-    };
-
-    ext.setupSerial = function(portName, baudRate){
-        if (portName == nullPort){
-            return;
-        }
-        console.log(portName);
-        console.log(baudRate);
     };
 
     var messageReceivedEvent = false;
     socket.on("dataIn", function(data){//oncoming serial data
+        lastMessageReceived = data;
         messageReceivedEvent = true;
         console.log("data: " + data);
     });
@@ -150,6 +150,13 @@ new (function() {
     };
     ext.getBaudRate = function(){
         return currentBaud;
+    };
+
+    ext.getLastMessageReceived = function(){
+        return lastMessageReceived;
+    };
+    ext.getLastMessageSent = function(){
+        return lastMessageSent;
     };
 
     ScratchExtensions.register('Serial Port', descriptor, ext);
