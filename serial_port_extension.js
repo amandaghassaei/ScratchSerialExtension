@@ -14,7 +14,7 @@ new (function() {
             ['', 'refresh ports', 'refreshPorts'],
             ['r', 'port name: %m.availablePorts', 'choosePort', availablePorts[0]],
             ['r', 'baud rate: %m.baudRates', 'chooseBaudRate', 9600],
-            ['', 'serial port with name: %m.availablePorts and rate: %m.baudRates', 'setupSerial', availablePorts[0], 9600]
+            ['b', 'serial port with name: %s and baud rate: %s', 'setupSerial']
         ],
         menus: {
             availablePorts: availablePorts,
@@ -41,11 +41,11 @@ new (function() {
         if (portName == "nothing connected"){
             return {};
         }
-        return {portName: portName};
+        return portName;
     };
 
     ext.chooseBaudRate = function(baudRate) {
-        return {baudRate: baudRate};
+        return baudRate;
     };
 
     ext.setupSerial = function(portName, baudRate){
