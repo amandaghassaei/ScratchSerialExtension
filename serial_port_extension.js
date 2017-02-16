@@ -52,6 +52,7 @@ new (function() {
             ['r', "serial port: %m.availablePorts", 'setPort', currentPort],
             ['r', "baud rate: %m.baudRates", 'setBaud', currentBaud],
             ['', 'connect to %s at %s', 'setupSerial', currentPort, currentBaud],
+            ['', 'send serial message: %s', 'sendMessage'],
             ['h', 'when serial message received', 'dataIn'],
             ['h', 'when serial port connected', 'portConnected'],
             ['h', 'when serial port disconnected', 'portDisconnected'],
@@ -100,6 +101,11 @@ new (function() {
         }
         socket.emit("baudRate", baudRate);
         socket.emit("portName", portName);
+    };
+
+    ext.sendMessage = function(message){
+        lastMessageSent = message;
+        socket.emit("dataOut", message);
     };
 
     var messageReceivedEvent = false;
