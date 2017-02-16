@@ -46,12 +46,10 @@ new (function() {
     //bind events
     socket.on('connected', function(data){
 
-        // console.log("connected");
-
         if (data.portName) currentPort = data.portName;
         if (data.baudRate) currentBaud = data.baudRate;
 
-        var oldPorts = availablePorts.slice();
+        var oldPorts = availablePorts.slice();//copy array
 
         availablePorts.splice(0, availablePorts.length);
         if (data.availablePorts && data.availablePorts.length>0){
@@ -62,7 +60,6 @@ new (function() {
             availablePorts.push(nullPort);
             currentPort = availablePorts[0];
         }
-        // console.log(availablePorts);
 
         //check if availablePorts has changed
         if (compareArrays(availablePorts, oldPorts)){
@@ -116,7 +113,8 @@ new (function() {
     };
 
     ext.setupSerial = function(portName, baudRate){
-        if (portName == nullPort){
+        console.log(portName === nullPort);
+        if (portName === nullPort){
             socket.emit("disconnectPort");
             return;
         }
