@@ -38,7 +38,7 @@ new (function() {
             availablePorts: availablePorts,
             baudRates: [9600, 19200, 38400, 57600, 74880, 115200, 230400, 250000]
         },
-        url: ''
+        url: 'https://github.com/amandaghassaei/ScratchSerialExtension'
     };
 
     //bind events
