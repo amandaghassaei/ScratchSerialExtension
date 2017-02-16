@@ -94,11 +94,11 @@ new (function() {
     };
 
     ext.setupSerial = function(portName, baudRate){
-        socket.emit("baudRate", baudRate);
         if (portName == nullPort){
             socket.emit("disconnectPort");
             return;
         }
+        socket.emit("baudRate", baudRate);
         socket.emit("portName", portName);
     };
 
@@ -106,7 +106,7 @@ new (function() {
     socket.on("dataIn", function(data){//oncoming serial data
         lastMessageReceived = data;
         messageReceivedEvent = true;
-        console.log("data: " + data);
+        // console.log("data: " + data);
     });
     ext.dataIn = function(){
         if (messageReceivedEvent === true){
