@@ -16,26 +16,6 @@ new (function() {
     var lastMessageSent = "";
     var lastError = "";
 
-    //bind events
-    socket.on('connected', function(data){
-
-        // console.log("connected");
-
-        if (data.portName) currentPort = data.portName;
-        if (data.baudRate) currentBaud = data.baudRate;
-        availablePorts.splice(0, availablePorts.length);
-        if (data.availablePorts && data.availablePorts.length>0){
-            for (var i=0;i<data.availablePorts.length;i++){
-               availablePorts.push(data.availablePorts[i]);
-            }
-        } else {
-            availablePorts.push(nullPort);
-            currentPort = availablePorts[0];
-        }
-        console.log(availablePorts);
-        ScratchExtensions.register('Serial Port', descriptor, ext);
-    });
-
     var descriptor = {
         blocks: [
             ['', 'refresh ports', 'refreshPorts'],
@@ -57,8 +37,37 @@ new (function() {
         menus: {
             availablePorts: availablePorts,
             baudRates: [9600, 19200, 38400, 57600, 74880, 115200, 230400, 250000]
-        }
+        },
+        url: ''
     };
+
+    //bind events
+    socket.on('connected', function(data){
+
+        // console.log("connected");
+
+        if (data.portName) currentPort = data.portName;
+        if (data.baudRate) currentBaud = data.baudRate;
+        availablePorts.splice(0, availablePorts.length);
+        if (data.availablePorts && data.availablePorts.length>0){
+            for (var i=0;i<data.availablePorts.length;i++){
+                availablePorts.push(data.availablePorts[i]);
+            }
+        } else {
+            availablePorts.push(nullPort);
+            currentPort = availablePorts[0];
+        }
+        console.log(availablePorts);
+
+        //this is so hacky!  I know I'm terrible, but this was the only way to update my menus
+        Scratch.FlashApp.ASobj.ASloadExtension({
+            extensionName: "Serial Port",
+            blockSpecs: descriptor.blocks,
+            url: descriptor.url,
+            menus: descriptor.menus
+        });
+    });
+
 
     // Cleanup function when the extension is unloaded
     ext._shutdown = function() {
