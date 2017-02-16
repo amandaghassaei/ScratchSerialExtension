@@ -13,7 +13,8 @@ new (function() {
         blocks: [
             ['', 'refresh ports', 'refreshPorts'],
             ['r', 'port name: %m.availablePorts', 'choosePort', availablePorts[0]],
-            ['r', 'baud rate: %m.baudRates', 'chooseBaudRate', 9600]
+            ['r', 'baud rate: %m.baudRates', 'chooseBaudRate', 9600],
+            ['', 'serial port with name: %m.availablePorts and rate: %m.baudRates', setupSerial, availablePorts[0], 9600]
         ],
         menus: {
             availablePorts: availablePorts,
@@ -45,6 +46,11 @@ new (function() {
 
     ext.chooseBaudRate = function(baudRate) {
         return {baudRate: baudRate};
+    };
+
+    ext.setupSerial = function(portName, baudRate){
+        console.log(portName);
+        console.log(baudRate);
     };
 
     ScratchExtensions.register('Serial Port', descriptor, ext);
