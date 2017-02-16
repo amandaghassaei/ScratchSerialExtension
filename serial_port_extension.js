@@ -48,6 +48,9 @@ new (function() {
 
         if (data.portName) currentPort = data.portName;
         if (data.baudRate) currentBaud = data.baudRate;
+
+        var oldPorts = availablePorts.slice();
+
         availablePorts.splice(0, availablePorts.length);
         if (data.availablePorts && data.availablePorts.length>0){
             for (var i=0;i<data.availablePorts.length;i++){
@@ -57,16 +60,34 @@ new (function() {
             availablePorts.push(nullPort);
             currentPort = availablePorts[0];
         }
-        console.log(availablePorts);
+        // console.log(availablePorts);
 
-        //this is so hacky!  I know I'm terrible, but this was the only way to update my menus
-        Scratch.FlashApp.ASobj.ASloadExtension({
-            extensionName: "Serial Port",
-            blockSpecs: descriptor.blocks,
-            url: descriptor.url,
-            menus: descriptor.menus
-        });
+        //check if availablePorts has changed
+        if (compareArrays(availablePorts, oldPorts)){
+            //this is so hacky!  I know I'm terrible, but this was the only way to update my menus
+            Scratch.FlashApp.ASobj.ASloadExtension({
+                extensionName: "Serial Port",
+                blockSpecs: descriptor.blocks,
+                url: descriptor.url,
+                menus: descriptor.menus
+            });
+        }
     });
+
+    function compareArrays(arr1, arr2){
+        if (arr1.length != arr2.length) return true;
+        for (var i=0;i<arr1.length;i++){
+            var match = false;
+            for (var j=0;j<arr2.length;j++){
+                if (arr1[i] === arr2[j]) {
+                    match = true;
+                    break;
+                }
+            }
+            if (!match) return true;
+        }
+        return false;
+    }
 
 
     // Cleanup function when the extension is unloaded
