@@ -84,7 +84,6 @@ new (function() {
         if (device) device.close();
         device = devices[portName];
         if (device === undefined) return;
-        device.set_receive_handler(receiveMessageHandler);
         currentPort = device.id;
         currentBaud = baudRate;
         device.open({ stopBits: 0, bitRate: baudRate}, deviceOpened);
@@ -130,6 +129,7 @@ new (function() {
 
     var portConnectedEvent = false;
     function deviceOpened(){
+        device.set_receive_handler(receiveMessageHandler);
         connected = true;
         portConnectedEvent = true;
     }
