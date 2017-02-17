@@ -180,7 +180,7 @@ new (function() {
 
         console.log(retry);
         if (!socketConnected){
-            if (retry) {
+            if (retry === true) {
                 attemptToConnectToSocket(function(){
                     console.log("amanda");
                     _setupSerial(portName, baudRate, false);
