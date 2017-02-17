@@ -176,14 +176,16 @@ new (function() {
         return baudRate;
     };
 
-    function setupSerial(portName, baudRate, retry){
+    function _setupSerial(portName, baudRate, retry){
 
         console.log(retry);
         if (!socketConnected){
-            if (retry) attemptToConnectToSocket(function(){
-                console.log("amanda");
-                setupSerial(portName, baudRate, false);
-            });
+            if (retry) {
+                attemptToConnectToSocket(function(){
+                    console.log("amanda");
+                    _setupSerial(portName, baudRate, false);
+                });
+            }
             return;
         }
 
@@ -195,7 +197,7 @@ new (function() {
     }
 
     ext.setupSerial = function(portName, baudRate){
-        setupSerial(portName, baudRate, true);
+        _setupSerial(portName, baudRate, true);
     };
 
     ext.sendMessage = function(message){
