@@ -2,7 +2,7 @@
 
 <img src="https://github.com/amandaghassaei/ScratchSerialExtension/raw/master/screenshot.png" />
 
-This is a Serial Port extension for Scratch - it allows you to pass serial messages between the scratch interface and any serial device.
+This is a Serial Communication extension for Scratch - it allows you to pass serial messages between the scratch interface and any serial device.
 
 To run the extension, go to:
 
