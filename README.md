@@ -13,8 +13,8 @@ Many blocks will initially load up red and undefined, that's ok.
 
 Click "Load Experimental Extension", and paste in the following link:
 
-<a href="http://cdn.rawgit.com/amandaghassaei/ScratchSerialExtension/d365e8bf682b1bba02e3797737ad84ee04ba1217/serial_port_extension.js">
-http://cdn.rawgit.com/amandaghassaei/ScratchSerialExtension/d365e8bf682b1bba02e3797737ad84ee04ba1217/serial_port_extension.js</a>
+<a href="http://cdn.rawgit.com/amandaghassaei/ScratchSerialExtension/281d2f3fd45102a65fc798b03bb920b07c693211/serial_port_extension.js">
+http://cdn.rawgit.com/amandaghassaei/ScratchSerialExtension/281d2f3fd45102a65fc798b03bb920b07c693211/serial_port_extension.js</a>
 
 Serial communication happens through a node.js server that must be running concurrently with scratch.
 To use the node server, first install nodejs:
