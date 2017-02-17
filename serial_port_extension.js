@@ -91,7 +91,8 @@ new (function() {
 
     ext.sendMessage = function(message){
         lastMessageSent = message;
-        device.send(message);
+        console.log(device);
+        if (device) device.send(message);
     };
 
     //warning, you may miss messages this way
