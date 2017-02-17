@@ -17,6 +17,9 @@ new (function() {
     var lastError = "";
     var connected = false;
 
+    var poller;
+    var device;
+
     var descriptor = {
         blocks: [
             ['', 'refresh ports', 'refreshPorts'],
@@ -87,6 +90,26 @@ new (function() {
         }
         return false;
     }
+
+    ext._deviceConnected = function(dev) {
+        availablePorts.push(dev);
+        console.log(dev);
+        if (!dev) {
+            // tryNextDevice();
+        }
+    };
+
+    ext._deviceRemoved = function(dev) {
+        if(device != dev) return;
+        if(poller) poller = clearInterval(poller);
+        device = null;
+    };
+
+    ext._shutdown = function() {
+        if(poller) poller = clearInterval(poller);
+        if(device) device.close();
+        device = null;
+    };
 
 
     // Cleanup function when the extension is unloaded
@@ -221,5 +244,5 @@ new (function() {
         socket.emit("flush");
     };
 
-    ScratchExtensions.register('Serial Port', descriptor, ext);
+    ScratchExtensions.register('Serial Port', descriptor, ext, {type: 'serial'});
 })();
