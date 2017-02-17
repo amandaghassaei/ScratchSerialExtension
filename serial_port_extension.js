@@ -70,10 +70,13 @@ new (function() {
             errorThrownEvent = true;
         });
 
+        socket.on("socketConnected", function(){
+            socketConnected = true;
+            if (callback) callback();
+        });
+
         //bind events
         socket.on('connected', function(data){
-
-            socketConnected = true;
 
             if (data.portName) currentPort = data.portName;
             if (data.baudRate) currentBaud = data.baudRate;
@@ -100,8 +103,6 @@ new (function() {
                     menus: descriptor.menus
                 });
             }
-
-            if (callback) callback();
         });
 
         socket.on("dataIn", function(data){//oncoming serial data
@@ -180,7 +181,7 @@ new (function() {
 
         console.log(retry);
         if (!socketConnected){
-            if (retry === true) {
+            if (retry) {
                 attemptToConnectToSocket(function(){
                     console.log("amanda");
                     _setupSerial(portName, baudRate, false);

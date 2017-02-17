@@ -16,6 +16,8 @@ var allPorts = [];
 
 io.on('connection', function(socket){
 
+    socket.emit("socketConnected");
+
     refreshAvailablePorts(function(_allPorts, _portName, _baudRate){
         changePort(_portName, _baudRate);
     });
@@ -65,9 +67,6 @@ io.on('connection', function(socket){
         }
         return true;
     }
-
-
-
 
     function refreshAvailablePorts(callback){
         var _allPorts = [];
