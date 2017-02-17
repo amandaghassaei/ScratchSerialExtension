@@ -92,28 +92,31 @@ new (function() {
 
     ext.sendMessage = function(message){
         lastMessageSent = message;
-        console.log(str2ab(message));
-        if (device) device.send(str2ab(message));
+        console.log(stringToUint(message));
+        if (device) device.send(stringToUint(message));
     };
 
-    function ab2str(buf) {
-        return String.fromCharCode.apply(null, new Uint16Array(buf));
+    function stringToUint(string) {
+        var string = btoa(unescape(encodeURIComponent(string))),
+            charList = string.split(''),
+            uintArray = [];
+        for (var i = 0; i < charList.length; i++) {
+            uintArray.push(charList[i].charCodeAt(0));
+        }
+        return new Uint8Array(uintArray);
     }
 
-    function str2ab(str) {
-        var buf = new ArrayBuffer(str.length*2); // 2 bytes for each char
-        var bufView = new Uint16Array(buf);
-        for (var i=0, strLen=str.length; i<strLen; i++) {
-            bufView[i] = str.charCodeAt(i);
-        }
-        return buf;
+    function uintToString(uintArray) {
+        var encodedString = String.fromCharCode.apply(null, uintArray),
+            decodedString = decodeURIComponent(escape(atob(encodedString)));
+        return decodedString;
     }
 
     //warning, you may miss messages this way
     var messageReceivedEvent = false;
-    function receiveMessageHandler(data){
-        console.log(data);
-        lastMessageReceived = data;
+    function receiveMessageHandler(buffer){
+        console.log(uintToString(buffer));
+        lastMessageReceived = uintToString(buffer);
         messageReceivedEvent = true;
     }
     ext.dataIn = function(){
