@@ -115,6 +115,7 @@ new (function() {
     //warning, you may miss messages this way
     var messageReceivedEvent = false;
     function receiveMessageHandler(buffer){
+        console.log("hi");
         console.log(uintToString(buffer));
         lastMessageReceived = uintToString(buffer);
         messageReceivedEvent = true;
