@@ -11,17 +11,17 @@ click "Load Experimental Extension", and paste in the following link:
 <a href="https://rawgit.com/amandaghassaei/ScratchSerialExtension/033a78cdf2ca399259dc503a0fce092c8323592e/serial_port_extension.js">https://rawgit.com/amandaghassaei/ScratchSerialExtension/033a78cdf2ca399259dc503a0fce092c8323592e/serial_port_extension.js</a>
 
 Serial communication happens through a node.js server that must be running concurrently with scratch.
-To use the node server, first install node and npm:
+To use the node server, first install nodejs:
 
 <a href="https://nodejs.org/en/download/">node.js</a>
 
-this should install both node and npm, then use npm into install the following dependencies:
+this will also install the node package manager (npm), use npm into install the following dependencies from the terminal:
 
-**npm install -g serialport**<br/>
 <a href="https://www.npmjs.com/package/serialport">serialport</a><br/>
+**npm install -g serialport**<br/>
 
-**npm install -g socket.io**<br/>
 <a href="https://www.npmjs.com/package/socket.io">socket-io</a>
+**npm install -g socket.io**<br/>
 
 then download this git repo, navigate to the folder in the terminal and run:
 
