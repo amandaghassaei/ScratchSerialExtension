@@ -1,6 +1,6 @@
 # ScratchSerialExtension
 
-This is a Serial Port extension for scratch that allows you to pass serial messages between the scratch interface and any serial device.
+This is a Serial Port extension for Scratch - it allows you to pass serial messages between the scratch interface and any serial device.
 
 To run the extension, go to:
 
@@ -9,9 +9,10 @@ To run the extension, go to:
 Download this repo, then go to File>>Load Project in Scratch and open the file called SerialDemo.sb2.
 Many blocks will initially load up red and undefined, that's ok.
 
-Then click "Load Experimental Extension", and paste in the following link:
+Click "Load Experimental Extension", and paste in the following link:
 
-<a href="https://rawgit.com/amandaghassaei/ScratchSerialExtension/033a78cdf2ca399259dc503a0fce092c8323592e/serial_port_extension.js">https://rawgit.com/amandaghassaei/ScratchSerialExtension/033a78cdf2ca399259dc503a0fce092c8323592e/serial_port_extension.js</a>
+<a href="http://cdn.rawgit.com/amandaghassaei/ScratchSerialExtension/d365e8bf682b1bba02e3797737ad84ee04ba1217/serial_port_extension.js">
+http://cdn.rawgit.com/amandaghassaei/ScratchSerialExtension/d365e8bf682b1bba02e3797737ad84ee04ba1217/serial_port_extension.js</a>
 
 Serial communication happens through a node.js server that must be running concurrently with scratch.
 To use the node server, first install nodejs:
@@ -26,18 +27,19 @@ this will also install the node package manager (npm), use npm into install the 
 <a href="https://www.npmjs.com/package/socket.io">socket-io</a><br/>
 **npm install -g socket.io**
 
-Then navigate to the parent directory of this repo in the terminal and run:
+Navigate to the parent directory of this repo in the terminal and run:
 
 **node nodeServer.js**
 
 to start the node server.
 
-If you're interested in understanding better how node.js, socket.io, and serialport allows your browser to communicate with  serial devices, check out
+If you want to know more about how node.js, socket.io, and serialport allows your browser to communicate with  serial devices, check out
 a simple demo of standalone node server with web client I wrote <a href="https://github.com/amandaghassaei/NodeSerialPortBoilerplate">here</a>.
 
-I used the documentation from the <a href="https://github.com/LLK/scratchx/wiki#adding-blocks">Lifelong Kindergarten Group</a> to set up the Scratch interface for this extension.
+I used <a href="https://github.com/LLK/scratchx/wiki#adding-blocks">documentation from the Lifelong Kindergarten Group</a> to set up the Scratch interface for this extension.
 I'm working on a version of this extension that uses Scratch's <a href="https://scratch.mit.edu/info/ext_download/">serial browser plugin</a>, but am still trying to get that up and running.
 The latest version of that code is in the branch "serialplugin".
+
 
 
 **Attribution:**
