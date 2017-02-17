@@ -62,6 +62,7 @@ new (function() {
         socket = io.connect('http://localhost:8080');
 
         socket.on("connect_error", function(){
+            console.log("here");
             socket.disconnect();
             socket = null;
             socketConnected = false;
