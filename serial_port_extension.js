@@ -62,7 +62,6 @@ new (function() {
         socket = io.connect('http://localhost:8080', {'forceNew':true});
 
         socket.on("connect_error", function(){
-            console.log("here");
             socket.disconnect();
             socket = null;
             socketConnected = false;
@@ -179,12 +178,10 @@ new (function() {
 
     function setupSerial(portName, baudRate, retry){
 
-        console.log(socketConnected);
-        console.log(socket);
         console.log(retry);
-
         if (!socketConnected){
             if (retry) attemptToConnectToSocket(function(){
+                console.log("amanda");
                 setupSerial(portName, baudRate, false);
             });
             return;
