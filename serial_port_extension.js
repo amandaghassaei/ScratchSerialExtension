@@ -60,9 +60,7 @@ new (function() {
 
     ext._shutdown = function() {
         if(poller) poller = clearInterval(poller);
-        if (device) device.close(function(){
-            console.log("here");
-        });
+        if (device) device.close();
         device = null;
     };
 
@@ -83,7 +81,7 @@ new (function() {
         if (portName === nullPort){
             return;
         }
-        if (device) if (device) device.close();
+        if (device) device.close(function(){console.log("hi");});
         device = devices[portName];
         if (device === undefined) return;
         device.set_receive_handler(receiveMessageHandler);
