@@ -59,7 +59,7 @@ new (function() {
             socket = null;
         }
 
-        socket = io.connect('http://localhost:8080');
+        socket = io.connect('http://localhost:8080', {'forceNew':true});
 
         socket.on("connect_error", function(){
             console.log("here");
