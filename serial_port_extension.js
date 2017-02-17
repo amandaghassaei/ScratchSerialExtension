@@ -18,6 +18,11 @@ new (function() {
     var connected = false;
     var socketConnected = false;
 
+    var messageReceivedEvent = false;
+    var portConnectedEvent = false;
+    var portDisonnectedEvent = false;
+    var errorThrownEvent = false;
+
     var descriptor = {
         blocks: [
             ['', 'refresh ports', 'refreshPorts'],
@@ -91,6 +96,43 @@ new (function() {
 
             if (callback) callback();
         });
+
+        socket.on("dataIn", function(data){//oncoming serial data
+            lastMessageReceived = data;
+            messageReceivedEvent = true;
+        });
+
+        socket.on('portConnected', function(data){
+            currentPort = data.portName;
+            currentBaud = data.baudRate;
+            connected = true;
+            portConnectedEvent = true;
+        });
+
+        socket.on('portDisconnected', function(data){
+            currentPort = nullPort;
+            connected = false;
+            portDisonnectedEvent = true;
+        });
+
+        socket.on("errorMsg", function(data){
+            if (data.error) lastError = data.error;
+            else lastError = data;
+            connected = false;
+            errorThrownEvent = true;
+        });
+
+        socket.on("error", function(error){
+            lastError = error;
+            connected = false;
+            errorThrownEvent = true;
+        });
+
+        socket.on("connect_error", function(){
+            lastError = "node server connection error";
+            connected = false;
+            errorThrownEvent = true;
+        });
     }
 
     function compareArrays(arr1, arr2){
@@ -111,6 +153,7 @@ new (function() {
 
     // Cleanup function when the extension is unloaded
     ext._shutdown = function() {
+        if (socket) socket.disconnect();
         socket = null;
         io = null;
     };
@@ -122,7 +165,7 @@ new (function() {
     };
 
     ext.refreshPorts = function(){
-        socket.emit("refreshPorts");
+        if (socket) socket.emit("refreshPorts");
     };
 
     ext.setPort = function(portName){
@@ -132,10 +175,12 @@ new (function() {
         return baudRate;
     };
 
-    ext.setupSerial = function(portName, baudRate){
+    function setupSerial(portName, baudRate, retry){
 
         if (!socketConnected){
-            attemptToConnectToSocket(ext.setupSerial);
+            if (retry) attemptToConnectToSocket(function(){
+                setupSerial(portName, baudRate, false);
+            });
             return;
         }
 
@@ -144,6 +189,10 @@ new (function() {
             return;
         }
         socket.emit("initPort", {baudRate:baudRate, portName:portName});
+    }
+
+    ext.setupSerial = function(portName, baudRate){
+        setupSerial(portName, baudRate, true);
     };
 
     ext.sendMessage = function(message){
@@ -151,12 +200,6 @@ new (function() {
         socket.emit("dataOut", message);
     };
 
-    //warning, you may miss messages this way
-    var messageReceivedEvent = false;
-    socket.on("dataIn", function(data){//oncoming serial data
-        lastMessageReceived = data;
-        messageReceivedEvent = true;
-    });
     ext.dataIn = function(){
         if (messageReceivedEvent === true){
             messageReceivedEvent = false;
@@ -165,13 +208,6 @@ new (function() {
         return false;
     };
 
-    var portConnectedEvent = false;
-    socket.on('portConnected', function(data){
-        currentPort = data.portName;
-        currentBaud = data.baudRate;
-        connected = true;
-        portConnectedEvent = true;
-    });
     ext.portConnected = function(){
         if (portConnectedEvent === true){
             portConnectedEvent = false;
@@ -180,12 +216,6 @@ new (function() {
         return false;
     };
 
-    var portDisonnectedEvent = false;
-    socket.on('portDisconnected', function(data){
-        currentPort = nullPort;
-        connected = false;
-        portDisonnectedEvent = true;
-    });
     ext.portDisconnected = function(){
         if (portDisonnectedEvent === true){
             portDisonnectedEvent = false;
@@ -194,25 +224,6 @@ new (function() {
         return false;
     };
 
-    var errorThrownEvent = false;
-    socket.on("errorMsg", function(data){
-        if (data.error) lastError = data.error;
-        else lastError = data;
-        connected = false;
-        errorThrownEvent = true;
-    });
-
-    socket.on("error", function(error){
-        lastError = error;
-        connected = false;
-        errorThrownEvent = true;
-    });
-
-    socket.on("connect_error", function(){
-        lastError = "node server connection error";
-        connected = false;
-        errorThrownEvent = true;
-    });
     ext.errorThrown = function(){
         if (errorThrownEvent === true){
             errorThrownEvent = false;
