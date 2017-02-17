@@ -54,6 +54,10 @@ new (function() {
     function attemptToConnectToSocket(callback){
 
         if (socketConnected) return;
+        if (socket){
+            socket.disconnect();
+            socket = null;
+        }
 
         socket = io.connect('http://localhost:8080');
 
@@ -176,6 +180,7 @@ new (function() {
 
         console.log(socketConnected);
         console.log(socket);
+        console.log(retry);
 
         if (!socketConnected){
             if (retry) attemptToConnectToSocket(function(){
@@ -185,10 +190,10 @@ new (function() {
         }
 
         if (portName === nullPort){
-            socket.emit("disconnectPort");
+            if (socket) socket.emit("disconnectPort");
             return;
         }
-        socket.emit("initPort", {baudRate:baudRate, portName:portName});
+        if (socket) socket.emit("initPort", {baudRate:baudRate, portName:portName});
     }
 
     ext.setupSerial = function(portName, baudRate){
@@ -197,7 +202,7 @@ new (function() {
 
     ext.sendMessage = function(message){
         lastMessageSent = message;
-        socket.emit("dataOut", message);
+        if (socket) socket.emit("dataOut", message);
     };
 
     ext.dataIn = function(){
@@ -255,7 +260,7 @@ new (function() {
     };
 
     ext.flush = function(){
-        socket.emit("flush");
+        if (socket) socket.emit("flush");
     };
 
     ScratchExtensions.register('Serial Port', descriptor, ext);
