@@ -8,7 +8,7 @@ To run the extension, go to:
 
 click "Load Experimental Extension", and paste in the following link:
 
-<a href="https://rawgit.com/amandaghassaei/ScratchSerialExtension/751c38075af622aa836fa1b3b4de1a03f7ade051/serial_port_extension.js">https://rawgit.com/amandaghassaei/ScratchSerialExtension/751c38075af622aa836fa1b3b4de1a03f7ade051/serial_port_extension.js</a>
+<a href="https://rawgit.com/amandaghassaei/ScratchSerialExtension/033a78cdf2ca399259dc503a0fce092c8323592e/serial_port_extension.js">https://rawgit.com/amandaghassaei/ScratchSerialExtension/033a78cdf2ca399259dc503a0fce092c8323592e/serial_port_extension.js</a>
 
 Serial communication happens through a node server.  To start the server run:
 
