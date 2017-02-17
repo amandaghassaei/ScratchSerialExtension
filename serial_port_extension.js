@@ -81,7 +81,7 @@ new (function() {
         if (portName === nullPort){
             return;
         }
-        if (device) device.close(function(){console.log("hi");});
+        if (device) device.close();
         device = devices[portName];
         if (device === undefined) return;
         device.set_receive_handler(receiveMessageHandler);
@@ -92,9 +92,22 @@ new (function() {
 
     ext.sendMessage = function(message){
         lastMessageSent = message;
-        console.log(device);
-        if (device) device.send(message);
+        console.log(str2ab(message));
+        if (device) device.send(str2ab(message));
     };
+
+    function ab2str(buf) {
+        return String.fromCharCode.apply(null, new Uint16Array(buf));
+    }
+
+    function str2ab(str) {
+        var buf = new ArrayBuffer(str.length*2); // 2 bytes for each char
+        var bufView = new Uint16Array(buf);
+        for (var i=0, strLen=str.length; i<strLen; i++) {
+            bufView[i] = str.charCodeAt(i);
+        }
+        return buf;
+    }
 
     //warning, you may miss messages this way
     var messageReceivedEvent = false;
