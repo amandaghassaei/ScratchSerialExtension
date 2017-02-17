@@ -87,7 +87,7 @@ new (function() {
         device.set_receive_handler(receiveMessageHandler);
         currentPort = device.id;
         currentBaud = baudRate;
-        device.open({ stopBits: 0, bitRate: baudRate, ctsFlowControl: 0 }, deviceOpened);
+        device.open({ stopBits: 0, bitRate: baudRate}, deviceOpened);
     };
 
     ext.sendMessage = function(message){
