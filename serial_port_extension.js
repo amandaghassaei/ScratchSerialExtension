@@ -61,6 +61,8 @@ new (function() {
         //bind events
         socket.on('connected', function(data){
 
+            socketConnected = true;
+
             if (data.portName) currentPort = data.portName;
             if (data.baudRate) currentBaud = data.baudRate;
 
@@ -136,7 +138,7 @@ new (function() {
             attemptToConnectToSocket(ext.setupSerial);
             return;
         }
-        
+
         if (portName === nullPort){
             socket.emit("disconnectPort");
             return;
