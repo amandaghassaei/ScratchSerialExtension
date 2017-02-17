@@ -179,11 +179,9 @@ new (function() {
 
     function _setupSerial(portName, baudRate, retry){
 
-        console.log(retry);
         if (!socketConnected){
             if (retry) {
                 attemptToConnectToSocket(function(){
-                    console.log("amanda");
                     _setupSerial(portName, baudRate, false);
                 });
             }
