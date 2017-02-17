@@ -86,7 +86,7 @@ new (function() {
         if (device === undefined) return;
         currentPort = device.id;
         currentBaud = baudRate;
-        device.open({ stopBits: 0, bitRate: baudRate, bufferSize: 8192, ctsFlowControl: 2}, deviceOpened);
+        device.open({ stopBits: 0, bitRate: baudRate, bufferSize: 8192}, deviceOpened);
     };
 
     ext.sendMessage = function(message){
