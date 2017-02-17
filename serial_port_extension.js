@@ -61,6 +61,9 @@ new (function() {
             socket.disconnect();
             socket = null;
             socketConnected = false;
+            lastError = "node server connection error";
+            connected = false;
+            errorThrownEvent = true;
         });
 
         //bind events
@@ -124,12 +127,6 @@ new (function() {
 
         socket.on("error", function(error){
             lastError = error;
-            connected = false;
-            errorThrownEvent = true;
-        });
-
-        socket.on("connect_error", function(){
-            lastError = "node server connection error";
             connected = false;
             errorThrownEvent = true;
         });
