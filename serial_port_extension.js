@@ -8,7 +8,7 @@ new (function() {
 
     var nullPort = "nothing connected";
     var availablePorts = [nullPort];
-    var socket = io.connect('http://localhost:8080');
+    var socket;
 
     var currentPort = availablePorts[0];
     var currentBaud = 9600;
@@ -16,6 +16,7 @@ new (function() {
     var lastMessageSent = "";
     var lastError = "";
     var connected = false;
+    var socketConnected = false;
 
     var descriptor = {
         blocks: [
@@ -43,35 +44,52 @@ new (function() {
         url: 'https://github.com/amandaghassaei/ScratchSerialExtension'
     };
 
-    //bind events
-    socket.on('connected', function(data){
+    attemptToConnectToSocket();
 
-        if (data.portName) currentPort = data.portName;
-        if (data.baudRate) currentBaud = data.baudRate;
+    function attemptToConnectToSocket(callback){
 
-        var oldPorts = availablePorts.slice();//copy array
+        if (socketConnected) return;
 
-        availablePorts.splice(0, availablePorts.length);
-        if (data.availablePorts && data.availablePorts.length>0){
-            for (var i=0;i<data.availablePorts.length;i++){
-                availablePorts.push(data.availablePorts[i]);
+        socket = io.connect('http://localhost:8080');
+
+        socket.on("connect_error", function(){
+            socket.disconnect();
+            socket = null;
+            socketConnected = false;
+        });
+
+        //bind events
+        socket.on('connected', function(data){
+
+            if (data.portName) currentPort = data.portName;
+            if (data.baudRate) currentBaud = data.baudRate;
+
+            var oldPorts = availablePorts.slice();//copy array
+
+            availablePorts.splice(0, availablePorts.length);
+            if (data.availablePorts && data.availablePorts.length>0){
+                for (var i=0;i<data.availablePorts.length;i++){
+                    availablePorts.push(data.availablePorts[i]);
+                }
+            } else {
+                availablePorts.push(nullPort);
+                currentPort = availablePorts[0];
             }
-        } else {
-            availablePorts.push(nullPort);
-            currentPort = availablePorts[0];
-        }
 
-        //check if availablePorts has changed
-        if (compareArrays(availablePorts, oldPorts)){
-            //this is so hacky!  I know I'm terrible, but this was the only way to update my menus
-            Scratch.FlashApp.ASobj.ASloadExtension({
-                extensionName: "Serial Port",
-                blockSpecs: descriptor.blocks,
-                url: descriptor.url,
-                menus: descriptor.menus
-            });
-        }
-    });
+            //check if availablePorts has changed
+            if (compareArrays(availablePorts, oldPorts)){
+                //this is so hacky!  I know I'm terrible, but this was the only way to update my menus
+                Scratch.FlashApp.ASobj.ASloadExtension({
+                    extensionName: "Serial Port",
+                    blockSpecs: descriptor.blocks,
+                    url: descriptor.url,
+                    menus: descriptor.menus
+                });
+            }
+
+            if (callback) callback();
+        });
+    }
 
     function compareArrays(arr1, arr2){
         if (arr1.length != arr2.length) return true;
@@ -113,6 +131,12 @@ new (function() {
     };
 
     ext.setupSerial = function(portName, baudRate){
+
+        if (!socketConnected){
+            attemptToConnectToSocket(ext.setupSerial);
+            return;
+        }
+        
         if (portName === nullPort){
             socket.emit("disconnectPort");
             return;

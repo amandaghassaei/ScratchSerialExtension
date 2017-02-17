@@ -26,7 +26,7 @@ this will also install the node package manager (npm), use npm into install the 
 <a href="https://www.npmjs.com/package/socket.io">socket-io</a><br/>
 **npm install -g socket.io**
 
-then download this git repo, navigate to its parent directory in the terminal and run:
+Then navigate to the parent directory of this repo in the terminal and run:
 
 **node nodeServer.js**
 
