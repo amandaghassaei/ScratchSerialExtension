@@ -174,7 +174,8 @@ new (function() {
 
     function setupSerial(portName, baudRate, retry){
 
-        console.log("setup");
+        console.log(socketConnected);
+        console.log(socket);
 
         if (!socketConnected){
             if (retry) attemptToConnectToSocket(function(){
