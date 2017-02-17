@@ -50,7 +50,7 @@ new (function() {
     ext._deviceConnected = function(dev) {
         if (dev && dev.id){
             if (availablePorts[0] === nullPort) availablePorts.splice(0,1);//remove first element
-            if (availablePorts.indexOf(dev) < 0){
+            if (availablePorts.indexOf(dev.id) < 0){
                 availablePorts.push(dev.id);
                 devices[dev.id] = dev;
                 updateMenu();
@@ -125,8 +125,8 @@ new (function() {
     var portDisonnectedEvent = false;
     ext._deviceRemoved = function(dev) {
         if (dev && dev.id){
-            if (availablePorts.indexOf(dev) >= 0){
-                availablePorts.splice(availablePorts.indexOf(dev), 1);
+            if (availablePorts.indexOf(dev.id) >= 0){
+                availablePorts.splice(availablePorts.indexOf(dev.id), 1);
                 delete devices[dev.id];
                 if (availablePorts.length == 0) availablePorts.push(nullPort);
                 updateMenu();
