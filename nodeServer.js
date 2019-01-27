@@ -3,6 +3,7 @@
  */
 
 var SerialPort = require('SerialPort');
+const Readline = require('node_modules/@serialport/parser-readline')
 
 var app = require('http').createServer();
 var io = require('socket.io')(app);
